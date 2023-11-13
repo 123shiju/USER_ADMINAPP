@@ -6,7 +6,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node BackEnd/Server.js"
+    "start": "node BackEnd/Server.js",
+    "server":"nodemon BackEnd/server.js",
+    "client":"npm  run dev --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+
+
+
   },
   "keywords": [],
   "author": "",
