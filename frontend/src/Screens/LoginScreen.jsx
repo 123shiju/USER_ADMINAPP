@@ -28,16 +28,20 @@ const LoginScreen = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const result = await login({ email, password }).unwrap();
-      if (login.fullfilled.match(result)) {
-        const res = result.payload;
-        dispatch(setCredentials({ ...res }));
-        navigate("/");
-      }
+      // const result = await login({ email, password }).unwrap();
+      // if (login.fulfilled.match(result)) {
+      //   const res = result.payload;
+      //   dispatch(setCredentials({ ...res }));
+      //   navigate("/");
+      const res = await login({email, password }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      navigate("/");
     } catch (err) {
-      toast.error(err?.data.message || err.error);
+      const errorMessage = err?.data?.message || err?.error || 'An error occurred';
+      toast.error(errorMessage);
     }
   };
+  
 
   return (
     <FormContainer>
