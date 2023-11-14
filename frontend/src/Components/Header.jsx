@@ -5,7 +5,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from 'react-router-dom'
 import { useLogoutMutation } from "../slices/usersApiSlice";
 
-import {logout } from '../slices/Authslices'
+import { logout } from '../slices/Authslices'
 
 const Header = () => {
 
@@ -14,9 +14,9 @@ const Header = () => {
    const dispatch=useDispatch()
    const navigate=useNavigate()
 
-  const {logoutApiCall} =useLogoutMutation()
+  const [logoutApiCall] = useLogoutMutation()
 
-  const logoutHandler =async () =>{
+  const logoutHandler = async () =>{
     try {
       await logoutApiCall().unwrap();
       dispatch(logout())

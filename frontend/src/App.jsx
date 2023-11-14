@@ -4,10 +4,9 @@ import { Container } from 'react-bootstrap'
 import Header from './Components/Header'
 import { ToastContainer } from  'react-toastify'
 
-import 'react-toastify/dist/ReactToastify.css'
+import 'react-toastify/dist/ReactToastify.css';
 
 
-// import Homescreens from './Screens/Homescreens'
 const App = () => {
   return (
     <>
