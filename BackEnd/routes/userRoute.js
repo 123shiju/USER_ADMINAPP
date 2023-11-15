@@ -9,5 +9,6 @@ import { authUser,updateUserProfile,GetUserProfile,logOutUser,registerUser } fro
  router.post('/logout',logOutUser)
  router.route('/profile').get(protect,GetUserProfile).put(protect,updateUserProfile)
  
+ 
 
 export default router
