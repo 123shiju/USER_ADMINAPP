@@ -23,7 +23,6 @@ const authAdmin = asyncHandler(async (req, res) => {
 
 const registerAdmin = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  console.log(name, email, password);
   const admin = await User.create({
     name,
     email,
@@ -54,14 +53,12 @@ const logoutAdmin = asyncHandler(async (req, res) => {
 const listUserProfile = asyncHandler(async (req, res) => {
 
   const userList = await User.find({isAdmin:false});
-console.log('users',userList);
   res.status(200).json(userList);
 });
 
 const editUserProfile = asyncHandler(async (req, res) => {
   const { userId, name, email } = req.body;
 
-  console.log(userId, name, email);
   if (!userId) {
     res.status(404);
     throw new Error("user updation failed");
@@ -81,9 +78,9 @@ const editUserProfile = asyncHandler(async (req, res) => {
 
 const deleteUserData = asyncHandler(async (req, res) => {
   const { userId } = req.body;
-  console.log(req.body.userId, "req body");
+
   const delUser = await User.findByIdAndDelete(userId);
-  console.log(delUser, "deluser");
+  
   if (delUser) {
     res.status(200).json({ message: "user deleted sucessfully" });
   } else {
@@ -93,24 +90,32 @@ const deleteUserData = asyncHandler(async (req, res) => {
 
 const blockUser = asyncHandler(async (req, res) => {
   const userId = req.body.userId;
-  const blockTrue = {
-    isBlocked: true,
-  };
-  const blockUser = await User.findByIdAndUpdate(userId, blockTrue);
-  if (blockUser) {
-    res.status(200).json({ message: "user blocked sucessfully" });
-  } else {
-    res.status(404).json({ message: "user not found" });
+
+  try {
+    
+    const blockedUser = await User.findByIdAndUpdate(userId, { isBlocked: true });
+    
+    if (blockedUser) {
+
+      res.status(200).json({ message: "User blocked successfully" });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
 const unblockUser = asyncHandler(async (req, res) => {
   const userId = req.body.userId;
-  console.log(req.body.userId, "req.body.userId");
+  
   const unblockFalse = {
     isBlocked: false,
   };
   const blockUser = await User.findByIdAndUpdate(userId, unblockFalse);
-
+  console.log("unblock",blockUser)
   if (blockUser) {
     res.status(200).json({ message: "user unblocked sucessfully" });
   } else {

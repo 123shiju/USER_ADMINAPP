@@ -8,14 +8,19 @@ const authUser = asyncHandler(async (req,res)=>{
 
   const {email,password} =req.body;
   const user=await User.findOne({email})
-  if(user && (await user.matchPasswords(password))){
+  if(user && !user.isBlocked  && (await user.matchPasswords(password))){
     generateToken(res,user._id)
     res.status(201).json({
       _id:user._id,
       name:user.name,
-      email:user.email
+      email:user.email,
     })
-   }else{
+   }else if (user.isBlocked){
+    res.cookie('jwt', '', { httpOnly: true, expires: new Date(0) });
+    res.status(400)
+    throw new Error("you have been blocked")
+}
+   else{
     res.status(400)
     throw new Error('invalid email or password')
    }
@@ -37,7 +42,8 @@ const { name ,email,password} = req.body
    const user=await User.create({
     name,
     email,
-    password
+    password,
+
    })
 
 
@@ -75,7 +81,8 @@ const GetUserProfile = asyncHandler(async (req,res)=>{
   const user={
     _id:req.user._id,
     name:req.user.name,
-    email:req.user.email
+    email:req.user.email,
+    image:req.user.image
 
   }
 
@@ -89,6 +96,9 @@ const updateUserProfile = asyncHandler(async (req,res)=>{
   if(user){
     user.name=req.body.name || user.name
     user.email=req.body.email || user.email
+    if(req.file){
+      user.userImage=req.file.filename || user.userImage
+    }
     if(req.body.password){
       user.password=req.body.password
     }
@@ -98,7 +108,11 @@ const updateUserProfile = asyncHandler(async (req,res)=>{
     _id:updateduser._id,
     name:updateduser.name,
     email:updateduser.email,
+    image: updateduser.userImage,
+
   })
+
+  
   }else{
     res.status(404)
     throw new Error('User not found')

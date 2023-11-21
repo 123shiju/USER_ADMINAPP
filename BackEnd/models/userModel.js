@@ -19,6 +19,13 @@ const userSchema=mongoose.Schema({
         type: Boolean,
         default: false, 
       },
+      isBlocked: {
+        type: Boolean,
+        default: false,
+      },
+      userImage: {
+        type: String,
+      },
 },{
     timestamps:true
 })
@@ -38,7 +45,8 @@ userSchema.pre('save',async function(next){
 
 userSchema.methods.matchPasswords=async function(enteredPassword){
 
-    return await bcrypt.compare(enteredPassword,this.password);
+    const isMatch = await bcrypt.compare(enteredPassword, this.password);
+    return isMatch;
 
 }
 

@@ -1,4 +1,3 @@
-import path from 'path'
 import express from 'express'
 import  dotenv from 'dotenv'
 import userRoutes from './routes/userRoute.js'
@@ -9,8 +8,6 @@ import { notFound,erroHandler } from './middleware/errorMiddleware.js';
 import connectDB from './config/db.js';
 const port=process.env.PORT || 5000;
 import cors from 'cors'
-
-
 
 connectDB();
 
@@ -25,7 +22,7 @@ const corsOptions = {
   };
   
 app.use(cors(corsOptions));
-  
+app.use(express.static("BackEnd/public"))
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())

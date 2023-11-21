@@ -15,6 +15,7 @@ const ProfileScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [Confirmpassword, setConfirmPassword] = useState("");
+  const [image,setImage]=useState("")
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -36,12 +37,15 @@ const ProfileScreen = () => {
       toast.error("passwords do not match");
     } else {
        try {
-          const res=await updateProfile({
-          _id:userInfo._id,
-          name,
-          email,
-          password}).unwrap();
-          dispatch[setCredentials({...res})]
+        const formData=new FormData();
+        formData.append("_id", userInfo._id)
+        formData.append("name",name)
+        formData.append(" email", email)
+        formData.append("password",password)
+        formData.append("userImage",image)
+  
+          const res=await updateProfile(formData).unwrap();
+          dispatch(setCredentials({ ...res }));
           toast.success('profile updated')
        } catch (err) {
         toast.error(err?.data?.message) || err.error
@@ -89,6 +93,13 @@ const ProfileScreen = () => {
             placeholder="confirm password"
             value={Confirmpassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+        <Form.Group className="my-2" controlId="userImage">
+          <Form.Label>Profile Picture </Form.Label>
+          <Form.Control
+            type="file"
+            onChange={(e) => setImage(e.target.files[0])}
           ></Form.Control>
         </Form.Group>
 

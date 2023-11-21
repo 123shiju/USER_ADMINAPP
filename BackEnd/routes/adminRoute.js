@@ -11,7 +11,7 @@ import {
   deleteUserData,
   blockUser,
   unblockUser,
-} from "../controllers/adminController.js";
+} from "../Controllers/adminController.js";
 
 router.post("/auth", authAdmin);
 

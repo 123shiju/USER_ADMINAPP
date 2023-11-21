@@ -18,10 +18,12 @@ const protect=asyncHandler(async(req,res,next)=>{
 
 
         } catch (error) {
+            res.cookie('jwt', '', { httpOnly: true, expires: new Date(0) });
             res.status(401)
             throw new Error('Not authorized, invalid token')
         }
     }else{
+        res.cookie('jwt', '', { httpOnly: true, expires: new Date(0) });
         res.status(401)
         throw new Error('Not authorized, no token')
     }
