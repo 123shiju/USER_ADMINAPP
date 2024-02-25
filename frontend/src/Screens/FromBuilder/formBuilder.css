@@ -1,0 +1,9 @@
+.Form_btn{
+    display: flex;
+    width: 200px;
+    text-align: center;
+    padding-left: 51px;
+    border-radius: 8px;
+    border-color: aquamarine;
+    margin-top: 10px; 
+}

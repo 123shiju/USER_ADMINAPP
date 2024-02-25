@@ -26,6 +26,7 @@ import AdminLoginScreen from './Screens/AdminLoginScreen.jsx'
 import AdminPrivateRoute from './Components/AdminPrivateRoute.jsx'
 
 import UsersListScreen from "./Screens/UserListScreen.jsx"
+import FormList from './Screens/FormList.jsx'
 
 
 
@@ -44,6 +45,7 @@ const router = createBrowserRouter(
       <Route path='/admin/login' element={<AdminLoginScreen />} />
       <Route path='' element={<AdminPrivateRoute />}>
         <Route path="/admin/users-list" element={<UsersListScreen />} />
+        <Route path='/form-list/:userId' element={<FormList /> } ></Route>
       </Route>
     </Route>
   )

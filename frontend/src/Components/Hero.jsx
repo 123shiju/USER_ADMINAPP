@@ -1,9 +1,9 @@
 import { Container, Card, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector } from "react-redux";
+import CreateForm from '../Screens/FromBuilder/FormBuilder.jsx';
 const Hero = () => {
   const { userInfo } = useSelector((state) => state.auth);
-  
   
   const PROFILE_URL = "http://localhost:5000/images/";
   
@@ -12,24 +12,25 @@ const Hero = () => {
     <div className=" py-5">
       <Container className="d-flex justify-content-center">
         <Card className="p-5 d-flex flex-column align-items-center hero-card bg-light w-75">
-          <h1 className="text-center mb-4">MERN Authentication</h1>
           {userInfo ? (
             <>
-              {(
-                <img
-                  src={`http://localhost:5000/images/${userInfo.image}`}
-                  alt={userInfo.name}
-                  style={{
-                    width: "150px",
-                    height: "150px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                />
-              )}
-              <h1 className="text-center mb-4">
+            <h1 className="text-center mb-4">
                 {userInfo ? `Welcome ${userInfo.name}` : "MERN Authentication"}
               </h1>
+              {/* {(
+                // <img
+                //   src={`http://localhost:5000/images/${userInfo.image}`}
+                //   alt={userInfo.name}
+                //   style={{
+                //     width: "150px",
+                //     height: "150px",
+                //     borderRadius: "50%",
+                //     objectFit: "cover",
+                //   }}
+                // />
+              )} */}
+              
+              <CreateForm />
               <p className="text-center mb-4">
                 {userInfo
                   ? `Email : ${userInfo.email}`

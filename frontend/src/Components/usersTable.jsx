@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from 'react-router-dom';
 import {
   useAdminUpdateUserMutation,
   useUserDataDeleteMutation,
@@ -8,7 +9,7 @@ import {
 
 import { Button, Table, Form, Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
-
+// import axios from 'axios';
 const UsersTable = ({ users }) => {
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -17,6 +18,7 @@ const UsersTable = ({ users }) => {
     name: "",
     email: "",
   });
+  const [userForms, setUserForms] = useState([]);
 
   const [UpdateUser, { isLoading }] = useAdminUpdateUserMutation();
   const [deleteUser, { isLoading: isDeleting }] = useUserDataDeleteMutation();
@@ -62,6 +64,29 @@ const UsersTable = ({ users }) => {
     setShowModal(false);
   };
 
+
+
+
+  // const handleForm = async (userId) => {
+  //   try {
+  //     const response = await axios.get(`http://localhost:5000/api/forms/getForm`, { withCredentials: true });
+  
+  //     if (response.status === 200) {
+  //       const data = response.data;
+  //       console.log('Data:', data);
+  
+
+  //     } else {
+  //       throw new Error(`Failed to fetch forms. Status: ${response.status}`);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching forms:', error.message);
+  //   }
+  // };
+  
+  
+  
+
   const userfilter = users.filter(
     (user) =>
       user.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -90,6 +115,7 @@ const UsersTable = ({ users }) => {
             <th>Action</th>
             <th>Action</th>
             <th>Action</th>
+            <th>Form</th>
           </tr>
         </thead>
         <tbody>
@@ -141,6 +167,16 @@ const UsersTable = ({ users }) => {
                   Delete
                 </Button>
               </td>
+              <Link to={`/form-list/${user._id}`}>
+                <Button
+                type="button"
+                variant="primary"
+                className="mt-3"
+                >
+                  
+                View Forms
+                </Button>
+              </Link>
             </tr>
           ))}
         </tbody>

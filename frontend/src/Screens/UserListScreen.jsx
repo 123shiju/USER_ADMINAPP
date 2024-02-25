@@ -10,7 +10,6 @@ const usersListScreen = () => {
         "http://localhost:5000/api/admin/users-list",
         { withCredentials: true }
       );
-      console.log("res",res)
       setUsers(res.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
