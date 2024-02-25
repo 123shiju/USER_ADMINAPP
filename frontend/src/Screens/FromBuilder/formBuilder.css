@@ -1,9 +1,22 @@
 .Form_btn{
-    display: flex;
-    width: 200px;
+    /* display: flex; */
+    width: 387px;
     text-align: center;
     padding-left: 51px;
     border-radius: 8px;
     border-color: aquamarine;
     margin-top: 10px; 
+    display: block;
+}
+.label input{
+    width: 387px;
+    text-align: center;
+    display: flex;
+    border-radius: 8px;
+    height: 41px;
+    border-color: #0243b9;
+    border-style: solid;
+}
+.btn-primary{
+    margin-top: 10px;
 }

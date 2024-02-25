@@ -16,23 +16,23 @@ const FormField = ({ field, updateField,totalFields, removeField, }) => {
       {field.type === 'text' && (
         <>
           {/* Additional options for text field if needed */}
-          <label>
+          <label className='label'>
             Placeholder:
             <input type="text" name="placeholder" value={field.placeholder || ''} onChange={handleChange} />
           </label>
         </>
       )}
-       <label>
+       <label className='label'>
         Label:
         <input type="text" name="label" value={field.label} onChange={handleChange} />
       </label>
       {['dropdown', 'multichoice'].includes(field.type) && (
         <>
-          <label>
+          <label className='label'>
             Placeholder:
             <input type="text" name="placeholder" value={field.placeholder || ''} onChange={handleChange} />
           </label>
-          <label>
+          <label className='label'>
             Options:
             <Select
               isMulti
@@ -42,7 +42,7 @@ const FormField = ({ field, updateField,totalFields, removeField, }) => {
           </label>
         </>
       )}
-      <button type="button" onClick={() => removeField(field.id)}>Remove Field</button>
+      <button type="button" onClick={() => removeField(field.id)} className='btn btn-danger' style={{marginLeft:'10px'}}>Remove Field</button>
     </div>
   );
 };

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import FormField from '../../Components/FormField';
 import { v4 as uuidv4 } from 'uuid';
 import './formBuilder.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
 const FormBuilder = () => {
   const [formFields, setFormFields] = useState([]);
@@ -35,10 +37,13 @@ const FormBuilder = () => {
       });
     
       if (response.status === 201) {
-        console.log('Form submitted successfully!');
-        // Optionally, reset the form state or navigate to a new page
+        toast.success('Form submitted successfully!');
+        setTimeout(() => {
+          window.location.reload();
+        }, 4000);
+  
       } else {
-        console.error(`Error submitting form. Status: ${response.status}`);
+        toast.error(`Error submitting form. Status: ${response.status}`);
       }
     } catch (error) {
       console.error('Error:', error.message);
@@ -50,7 +55,7 @@ const FormBuilder = () => {
     <div>
       <h2>Form Builder</h2>
       <form onSubmit={handleFormSubmit}>
-        <label>
+        <label className='label'>
           Form Title:
           <input type="text" value={formTitle} onChange={(e) => setFormTitle(e.target.value)} />
         </label>
@@ -73,7 +78,7 @@ const FormBuilder = () => {
             removeField={removeField}
           />
         ))}
-        <button type="submit">Submit Form</button>
+        <button type="submit" className='btn btn-primary'  style={{marginBottom:'200px'}}> Submit Form</button>
       </form>
     </div>
   );

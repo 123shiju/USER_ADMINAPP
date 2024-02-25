@@ -7,9 +7,7 @@ const HeroAdmin = () => {
           <h1 className="text-center mb-4">MERN Authentication APP</h1>
           <h2 className="text-center mb-4">Admin</h2>
           <p className="text-center mb-4">
-            This is a boilerplate for MERN authentication that stores a JWT in
-            an HTTP-Only cookie. It also uses Redux Toolkit and the React
-            Bootstrap library
+            Welcome back Admin
           </p>
         </Card>
       </Container>

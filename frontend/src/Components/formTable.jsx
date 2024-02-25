@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
-
+import axios from 'axios';
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import './formtable.css'
+ 
 const DynamicTable = ({ forms }) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [updatedForm, setUpdatedForm] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedFormIndex, setSelectedFormIndex] = useState(null);
   const [selectedFieldIndex, setSelectedFieldIndex] = useState(null);
+  
 
-  const handleUpdate = (formIndex, fieldIndex) => {
+
+  const handleUpdate = (formIndex) => {
     setSelectedFormIndex(formIndex);
-    setSelectedFieldIndex(fieldIndex);
+    setUpdatedForm(forms[formIndex]);
     setShowUpdateModal(true);
   };
+
 
   const handleDelete = (formIndex, fieldIndex) => {
     setSelectedFormIndex(formIndex);
@@ -22,7 +30,7 @@ const DynamicTable = ({ forms }) => {
   const handleCloseUpdateModal = () => {
     setShowUpdateModal(false);
     setSelectedFormIndex(null);
-    setSelectedFieldIndex(null);
+    setUpdatedForm(null);
   };
 
   const handleCloseDeleteModal = () => {
@@ -31,29 +39,83 @@ const DynamicTable = ({ forms }) => {
     setSelectedFieldIndex(null);
   };
 
-  const handleSaveChanges = (updatedField) => {
-    // Implement your update logic here
-    console.log(`Updating form ${selectedFormIndex}, field ${selectedFieldIndex} with data:`, updatedField);
+  const handleSaveChanges = async () => {
+    try {
+      if (selectedFormIndex === null || updatedForm === null) {
+        return;
+      }
 
-    // Close the modal
-    handleCloseUpdateModal();
+      // Prepare the updated form data
+      const updatedFormData = {
+        title: updatedForm.title,
+        fields: updatedForm.fields.map((field) => ({
+          label: field.label,
+          type: field.type,
+          options: field.options,
+          placeholder: field.placeholder,
+        })),
+      };
+
+
+      console.log("updateddata:",updatedFormData)
+      // Make an API call to update the database
+      const response = await axios.put(
+        `http://localhost:5000/api/forms/updateForm/${updatedForm._id}`,
+        { updatedForm: updatedFormData }
+      );
+
+      if (response.status === 200) {
+        toast.success('Form updated successfully!', {
+          onClose: () => {
+            handleCloseUpdateModal();
+            setTimeout(() => {
+              window.location.reload();
+            }, 4000);
+          },
+        });
+      } else {
+        throw new Error(`Failed to update form. Status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error updating form:', error.message);
+    }
   };
 
- const handleDeleteField = () => {
-  if (selectedFormIndex !== null && selectedFieldIndex !== null) {
-    // Create a copy of the forms array to avoid directly mutating state
-    const updatedForms = [...forms];
-
-    // Remove the selected field from the forms array
-    updatedForms[selectedFormIndex].fields.splice(selectedFieldIndex, 1);
-
-    // Update the state with the modified forms array
-    setForms(updatedForms);
-  }
-
-  // Close the modal
-  handleCloseDeleteModal();
-};
+  const handleDeleteField = async () => {
+    try {
+      if (selectedFormIndex === null) {
+        return;
+      }
+  
+      const formIdToDelete = forms[selectedFormIndex]._id; 
+      console.log('formidtodelete:',formIdToDelete)
+  
+      const response = await axios.delete(`http://localhost:5000/api/forms/deleteForm`, {
+        withCredentials: true,
+        data: {
+          formId: formIdToDelete,
+        },
+      });
+  
+      if (response.status === 200) {
+        toast.success('Form deleted successfully!', {
+          onClose: () => {
+            handleCloseDeleteModal();
+            
+            setTimeout(()=>{
+              window.location.reload();
+            },4000)
+          },
+        });
+      } else {
+        throw new Error(`Failed to delete form. Status: ${response.status}`);
+      }
+  
+    } catch (error) {
+      console.error('Error deleting form:', error.message);
+    }
+  };
+  
 
 
   return (
@@ -86,24 +148,72 @@ const DynamicTable = ({ forms }) => {
                     >
                       Update
                     </Button>
-                    <Button
-                      variant="danger"
-                      onClick={() => handleDelete(formIndex, fieldIndex)}
-                    >
-                      Delete
-                    </Button>
                   </td>
                 </tr>
               ))}
             </tbody>
+            <Button
+          variant="danger"
+          onClick={() => handleDelete(formIndex, fieldIndex)}
+          >
+            Delete
+          </Button>
           </Table>
+          
         </div>
       ))}
 
       {/* Update Modal */}
       <Modal show={showUpdateModal} onHide={handleCloseUpdateModal}>
-        {/* ... (same as before) */}
+        <Modal.Header closeButton>
+          <Modal.Title>Update Form</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedFormIndex !== null && updatedForm !== null && (
+            <Form>
+              {/* Create a form to allow users to modify the form details */}
+              <Form.Group controlId="formTitle">
+                <Form.Label>Title</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={updatedForm.title}
+                  onChange={(e) =>
+                    setUpdatedForm({ ...updatedForm, title: e.target.value })
+                  }
+                />
+              </Form.Group>
+
+              {updatedForm.fields.map((field, fieldIndex) => (
+                <div key={fieldIndex}>
+                  <Form.Group controlId={`formLabel-${fieldIndex}`}>
+                    <Form.Label>Label</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={field.label}
+                      onChange={(e) =>
+                        setUpdatedForm({
+                          ...updatedForm,
+                          fields: updatedForm.fields.map((f, i) =>
+                            i === fieldIndex
+                              ? { ...f, label: e.target.value }
+                              : f
+                          ),
+                        })
+                      }
+                    />
+                  </Form.Group>
+                  {/* Add more form fields for other properties */}
+                </div>
+              ))}
+
+              <Button variant="primary" onClick={handleSaveChanges}>
+                Save Changes
+              </Button>
+            </Form>
+          )}
+        </Modal.Body>
       </Modal>
+
 
       {/* Delete Modal */}
       <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
