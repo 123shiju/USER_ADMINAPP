@@ -13,4 +13,7 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    outDir: 'custom-dist-directory', // Check if outDir is set to a custom directory
+  },
 })

@@ -135,29 +135,34 @@ const DynamicTable = ({ forms }) => {
               </tr>
             </thead>
             <tbody>
-              {form.fields.map((field, fieldIndex) => (
-                <tr key={fieldIndex}>
-                  <td>{field.label}</td>
-                  <td>{field.type}</td>
-                  <td>{field.options.join(', ')}</td>
-                  <td>{field.placeholder}</td>
-                  <td>
-                    <Button
-                      variant="info"
-                      onClick={() => handleUpdate(formIndex, fieldIndex)}
-                    >
-                      Update
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+            {form.fields.map((field, fieldIndex) => (
+  <tr key={fieldIndex}>
+    <td>{field.label}</td>
+    <td>{field.type}</td>
+    <td>
+      {field.options.map((option, optionIndex) => (
+        <div key={optionIndex}>{option.value}</div>
+      ))}
+    </td>
+    <td>{field.placeholder}</td>
+    <td>
+      <Button
+        variant="info"
+        onClick={() => handleUpdate(formIndex, fieldIndex)}
+      >
+        Update
+      </Button>
+      <Button
+        variant="danger"
+        onClick={() => handleDelete(formIndex, fieldIndex)}
+      >
+        Delete
+      </Button>
+    </td>
+  </tr>
+))}
+
             </tbody>
-            <Button
-          variant="danger"
-          onClick={() => handleDelete(formIndex, fieldIndex)}
-          >
-            Delete
-          </Button>
           </Table>
           
         </div>
